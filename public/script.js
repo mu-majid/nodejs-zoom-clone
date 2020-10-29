@@ -2,6 +2,7 @@ const socket = io('/');
 const videoGrid = document.getElementById('video-grid');
 const myVideo = document.createElement('video');
 myVideo.muted = true;
+const peers = {};
 
 // undfined here to get auto gen ID
 var peer = new Peer(undefined, {
@@ -51,11 +52,16 @@ navigator.mediaDevices.getUserMedia({
     console.error(e);
   });
 
+
+socket.on('user-disconnected', userId => {
+  if (peers[userId]) peers[userId].close();
+});
+
+
 peer.on('open', id => {
   console.log('Peer open ', id);
   socket.emit('join-room', ROOM_ID, id);
 });
-
 
 const connectToNewUser = (userId, stream) => {
   console.log('User Connect, ', userId);
@@ -65,6 +71,12 @@ const connectToNewUser = (userId, stream) => {
     console.log('connect user stream');
     addVideoStream(video, userVideoStream);
   });
+
+  call.on('close', () => {
+    video.remove();
+  })
+
+  peers[userId] = call
 }
 
 const addVideoStream = (video, stream) => {
@@ -91,7 +103,7 @@ const muteUnmute = () => {
   }
 }
 
-const setMuteButton = () =>  {
+const setMuteButton = () => {
   const html = `
     <i class="fas fa-microphone"></i>
     <span>Mute</span>
@@ -99,7 +111,7 @@ const setMuteButton = () =>  {
   document.querySelector('.main__mute_button').innerHTML = html;
 }
 
-const setUnmuteButton = () =>  {
+const setUnmuteButton = () => {
   const html = `
     <i class="unmute fas fa-microphone-slash"></i>
     <span>Unmute</span>
