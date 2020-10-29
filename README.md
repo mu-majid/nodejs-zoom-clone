@@ -6,6 +6,7 @@
 - Stop Video
 - Chatting ability
 - Screen Sharing (TODO)
+- Leave meeting (only by closing tab, TODO (button))
 
 ## Technologies used:
 
