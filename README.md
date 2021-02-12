@@ -13,3 +13,7 @@
 - ExpressJS (backend server)
 - SocketIO (for handling joining meeting and chatting stuff).
 - PeerJS (for peer-to-peer comminucation and streaming audio and video between participants)
+
+## TODO:
+
+- Add share screen functionality
